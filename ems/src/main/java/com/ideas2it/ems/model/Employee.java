@@ -1,8 +1,9 @@
 package com.ideas2it.ems.model;
 
+import java.time.LocalDate;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.ideas2it.ems.util.DateUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,8 +18,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import java.time.LocalDate;
-import java.util.Set;
+import com.ideas2it.ems.util.DateUtil;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * <p>
@@ -39,6 +43,10 @@ import java.util.Set;
  * @author Jeevithakesavaraj
  */
 
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
+@Setter
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -80,84 +88,6 @@ public class Employee {
                joinColumns = @JoinColumn(name = "employee_id"),
                inverseJoinColumns = @JoinColumn(name = "project_id"))
     private Set<Project> projects;
-
-    public Employee() {}
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
- 
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    public void setSalaryAccount(SalaryAccount salaryAccount) {
-        this.salaryAccount = salaryAccount;
-    }
- 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setMailId(String mailId) {
-        this.mailId = mailId;
-    }
-
-    public void setExperience(int experience) {
-        this.experience = experience;
-    }
-
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public String getEmployeeName() {
-        return employeeName;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public SalaryAccount getSalaryAccount() {
-        return salaryAccount;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getMailId() {
-        return mailId;
-    }
-
-    public int getExperience() {
-        return experience;
-    }
-    
-    public boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public Set<Project> getProjects() {
-        return projects;
-    }
     
     /**
      * Get the set of projects from employee

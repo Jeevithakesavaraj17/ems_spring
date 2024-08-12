@@ -1,21 +1,26 @@
 package com.ideas2it.ems.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.ideas2it.ems.dto.EmployeeDto;
-import com.ideas2it.ems.mapper.EmployeeMapper;
-import com.ideas2it.ems.model.SalaryAccount;
-import com.ideas2it.ems.service.EmployeeService;
-import com.ideas2it.ems.service.DepartmentService;
-import com.ideas2it.ems.model.Department;
-import com.ideas2it.ems.model.Employee;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ideas2it.ems.dto.EmployeeDto;
+import com.ideas2it.ems.mapper.EmployeeMapper;
+import com.ideas2it.ems.model.Project;
+import com.ideas2it.ems.service.EmployeeService;
+import com.ideas2it.ems.service.DepartmentService;
+import com.ideas2it.ems.service.ProjectService;
+
 
 /**
  * <p>
@@ -26,30 +31,26 @@ import org.springframework.web.bind.annotation.*;
  * @author Jeevithakesavaraj
  */
 @Controller
-@RequestMapping("/api/employee")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * <p>
      * Get employee details and add employee data to the list.
      * </p>
      *
-     * @param employeeDto  employee details
+     * @param employeeDto          {@link EmployeeDto}
      * @return savedEmployeeDto    employee details which we have added
      */
     @PostMapping
     public ResponseEntity<EmployeeDto> addEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
-        Department department = departmentService.getDepartmentById(employeeDto.getDepartmentId());
-        SalaryAccount salaryAccount = new SalaryAccount(employeeDto.getAccountNumber(), employeeDto.getIfscCode());
-        Employee employee = EmployeeMapper.convertToEntity(employeeDto);
-        employee.setDepartment(department);
-        employee.setSalaryAccount(salaryAccount);
-        Employee employeeObject = employeeService.addEmployee(employee);
-        EmployeeDto savedEmployeeDto = EmployeeMapper.convertToDto(employeeObject);
+        EmployeeDto savedEmployeeDto = employeeService.addEmployee(employeeDto);
         return new ResponseEntity<>(savedEmployeeDto, HttpStatus.CREATED);
     }
 
@@ -62,11 +63,7 @@ public class EmployeeController {
      */
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> displayEmployees() {
-        List<Employee> employees = employeeService.getEmployees();
-        List<EmployeeDto> employeesDto = new ArrayList<>();
-        for (Employee employee : employees) {
-            employeesDto.add(EmployeeMapper.convertToDto(employee));
-        }
+        List<EmployeeDto> employeesDto = employeeService.getEmployees();
         return new ResponseEntity<>(employeesDto, HttpStatus.OK);
     }
 
@@ -80,8 +77,8 @@ public class EmployeeController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeDto> updateEmployeeDetails(@PathVariable("id") int employeeId, @RequestBody EmployeeDto employeeDto) {
-        Employee employee = employeeService.updateEmployeeDetails(employeeId, EmployeeMapper.convertToEntity(employeeDto));
-        return new ResponseEntity<>(EmployeeMapper.convertToDto(employee), HttpStatus.OK);
+        EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeDetails(employeeId, employeeDto);
+        return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
     }
 
     /**
@@ -96,4 +93,10 @@ public class EmployeeController {
         employeeService.deleteEmployee(employeeId);
     }
 
+    @PutMapping("/{employeeId}/project/{projectId}")
+    public ResponseEntity<EmployeeDto> addProjectToEmployee(@PathVariable int employeeId, @PathVariable int projectId) {
+        Project project = projectService.getProjectById(projectId);
+        EmployeeDto employeeDto = EmployeeMapper.convertToDto(employeeService.assignProjectToEmployee(employeeId, project));
+        return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
+    }
 }

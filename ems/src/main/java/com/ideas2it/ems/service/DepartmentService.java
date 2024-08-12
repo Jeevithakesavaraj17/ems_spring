@@ -2,10 +2,10 @@ package com.ideas2it.ems.service;
 
 import java.util.List;
 
-import com.ideas2it.ems.model.Department;
-import com.ideas2it.ems.model.Employee;
-
 import org.springframework.stereotype.Service;
+
+import com.ideas2it.ems.dto.DepartmentDto;
+import com.ideas2it.ems.dto.EmployeeDto;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ public interface DepartmentService {
      * @param department          department details
      * @return Department         If department added, return department
      */
-    Department addDepartment(Department department);
+    DepartmentDto addDepartment(DepartmentDto departmentDto);
 
     /**
      * <p>
@@ -35,7 +35,7 @@ public interface DepartmentService {
      *
      * @return List<Department>    list of Departments
      */
-    List<Department> getAllDepartments();
+    List<DepartmentDto> getAllDepartments();
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface DepartmentService {
      * @param departmentId ID of the department
      * @return department      ID department is present, return true or else return false.
      */
-    Department getDepartmentById(int departmentId);
+    DepartmentDto getDepartmentById(int departmentId);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface DepartmentService {
      * @param department   DepartmentName
      * @return Department  If department is updated, returns department object
      */
-    Department updateDepartment(int departmentId, Department department);
+    DepartmentDto updateDepartment(int departmentId, DepartmentDto departmentDto);
 
     /**
      * <p>
@@ -75,5 +75,5 @@ public interface DepartmentService {
      * @param departmentId    ID of the department which we have to get the employees
      * @return List<Employee>   List of employees in that department
      */
-    List<Employee> getEmployeesByDepartment(int departmentId);
+    List<EmployeeDto> getEmployeesByDepartment(int departmentId);
 }

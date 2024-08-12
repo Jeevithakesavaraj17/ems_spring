@@ -19,7 +19,7 @@ public class DepartmentMapper {
      * @param departmentDto   department details which we have to convert to department entity
      * @return department   object which we have converted to entity
      */
-    public static Department convertToEntity(DepartmentDto departmentDto) {
+    public static Department convertDtoToEntity(DepartmentDto departmentDto) {
         Department department = new Department();
         department.setDepartmentId(departmentDto.getId());
         department.setDepartmentName(departmentDto.getName());
@@ -31,7 +31,7 @@ public class DepartmentMapper {
      * @param department     department which we have convert to departmentDto
      * @return departmentDto   department dto which we have converted
      */
-    public static DepartmentDto convertToDto(Department department) {
+    public static DepartmentDto convertEntityToDto(Department department) {
         DepartmentDto departmentDto = new DepartmentDto(department.getDepartmentId(),
                 department.getDepartmentName());
         return departmentDto;

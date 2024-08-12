@@ -1,12 +1,15 @@
 package com.ideas2it.ems.model;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * <p>
@@ -19,6 +22,10 @@ import jakarta.persistence.Table;
  * @author Jeevithakesavaraj
  */
 
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
+@Setter
 @Entity
 @Table(name = "salary_account")
 public class SalaryAccount {
@@ -33,37 +40,6 @@ public class SalaryAccount {
 
     @Column(name = "ifsc_code")
     private String ifscCode;
-
-    public SalaryAccount() {}
-
-    public SalaryAccount(long accountNumber, String ifscCode) {
-        this.accountNumber = accountNumber;
-        this.ifscCode= ifscCode;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setAccountNumber(long accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-    
-    public void setIfscCode(String ifscCode) {
-        this.ifscCode = ifscCode;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public long getAccountNumber() {
-        return accountNumber;
-    }
-    
-    public String getIfscCode() {
-        return ifscCode;
-    }
 
     @Override
     public String toString() {

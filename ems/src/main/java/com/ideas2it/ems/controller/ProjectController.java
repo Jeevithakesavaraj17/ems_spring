@@ -3,14 +3,25 @@ package com.ideas2it.ems.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ideas2it.ems.dto.ProjectDto;
-import com.ideas2it.ems.mapper.ProjectMapper;
-import com.ideas2it.ems.model.Project;
-import com.ideas2it.ems.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ideas2it.ems.dto.EmployeeDto;
+import com.ideas2it.ems.dto.ProjectDto;
+import com.ideas2it.ems.mapper.EmployeeMapper;
+import com.ideas2it.ems.mapper.ProjectMapper;
+import com.ideas2it.ems.model.Employee;
+import com.ideas2it.ems.model.Project;
+import com.ideas2it.ems.service.ProjectService;
 
 /**
  * <p>
@@ -21,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Jeevithakesavaraj
  */
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping("/api/v1/project")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -95,4 +106,20 @@ public class ProjectController {
         projectService.deleteProject(projectId);
     }
 
+    /**
+     * <p>
+     *     Get list of employees in the particular project
+     * </p>
+     *
+     * @param projectId     Id of the project which we want list of employees
+     * @return List<Employee>   list of employees in particular project
+     */
+    public ResponseEntity<List<EmployeeDto>> getEmployeesByProject(int projectId) {
+        List<EmployeeDto> employeesDto = new ArrayList<>();
+        List<Employee> employees = projectService.getEmployeesByProject(projectId);
+        for (Employee employee : employees) {
+            employeesDto.add(EmployeeMapper.convertToDto(employee));
+        }
+        return new ResponseEntity<>(employeesDto, HttpStatus.OK);
+    }
 }

@@ -1,5 +1,7 @@
 package com.ideas2it.ems.model;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,9 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-
-import java.util.Set;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * <p>
@@ -23,6 +26,10 @@ import java.util.Set;
  * @author Jeevithakesavaraj
  */
 
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
+@Setter
 @Entity
 @Table(name = "project")
 public class Project {
@@ -36,49 +43,14 @@ public class Project {
     private String projectName;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted = false;
+    private boolean isDeleted;
 
     @ManyToMany(mappedBy = "projects", fetch = FetchType.EAGER)
     private Set<Employee> employees;
-    
-    public Project() {}
-
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
-    
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-   
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-    
-    public int getProjectId() {
-        return projectId;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public Set<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Set<Employee> employees) { 
-        this.employees = employees;
-    }
 
     @Override
     public String toString() {
         return "Project Id : " + projectId
                 + "\nProject name : " + projectName;
     }
-
 }

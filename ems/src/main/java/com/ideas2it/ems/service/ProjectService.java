@@ -2,8 +2,10 @@ package com.ideas2it.ems.service;
 
 import java.util.List;
 
-import com.ideas2it.ems.model.Project;
 import org.springframework.stereotype.Service;
+
+import com.ideas2it.ems.model.Employee;
+import com.ideas2it.ems.model.Project;
 
 /**
  * <p>
@@ -63,4 +65,13 @@ public interface ProjectService {
      */
     void deleteProject(int projectId);
 
+    /**
+     * <p>
+     *     Get list of employees in the particular project
+     * </p>
+     *
+     * @param projectId   Id of the project
+     * @return List<Employee>    list of employees in that project
+     */
+    List<Employee> getEmployeesByProject(int projectId);
 }

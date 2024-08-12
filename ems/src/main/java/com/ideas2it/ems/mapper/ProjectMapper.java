@@ -19,7 +19,7 @@ public class ProjectMapper {
      * @param projectDto   project details which we have to convert to project entity
      * @return project   object which we have converted to entity
      */
-    public static Project convertToEntity(ProjectDto projectDto) {
+    public static Project convertDtoToEntity(ProjectDto projectDto) {
         Project project = new Project();
         project.setProjectName(projectDto.getName());
         return project;
@@ -30,7 +30,7 @@ public class ProjectMapper {
      * @param project     project which we have convert to projectDto
      * @return projectDto   project dto which we have converted
      */
-    public static ProjectDto convertToDto(Project project) {
+    public static ProjectDto convertEntityToDto(Project project) {
         ProjectDto projectDto = new ProjectDto(project.getProjectId(),project.getProjectName());
         return projectDto;
     }

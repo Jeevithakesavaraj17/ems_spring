@@ -1,5 +1,7 @@
 package com.ideas2it.ems.model;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 /**
@@ -26,6 +30,10 @@ import java.util.Set;
  * @author Jeevithakesavaraj
  */
 
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
+@Setter
 @Entity
 @Table(name = "department")
 public class Department {
@@ -44,40 +52,6 @@ public class Department {
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     @JsonManagedReference
     Set<Employee> employees;
-
-    public Department() {}
-
-    public void setDepartmentId(int id) {
-        this.departmentId = id;
-    }
-
-    public void setDepartmentName(String name) {
-        this.departmentName = name;
-    }
-
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    public int getDepartmentId() {
-        return departmentId;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public Set<Employee> getEmployees() {
-        return employees;
-    }
-
-    public boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
-    }
 
     @Override
     public String toString() {

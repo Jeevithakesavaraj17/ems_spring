@@ -35,5 +35,5 @@ public class EmployeeDto {
     private int experience;
     private long accountNumber;
     private String ifscCode;
-
+    private String projects;
 }

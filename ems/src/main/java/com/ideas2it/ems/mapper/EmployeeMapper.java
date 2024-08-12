@@ -19,7 +19,7 @@ public class EmployeeMapper {
      * @param employeeDto   employee details which we have to convert to employee entity
      * @return employee     employee which we have converted to entity
      */
-    public static Employee convertToEntity(EmployeeDto employeeDto) {
+    public static Employee convertDtoToEntity(EmployeeDto employeeDto) {
         Employee employee = new Employee();
         employee.setEmployeeId(employeeDto.getId());
         employee.setEmployeeName(employeeDto.getName());
@@ -32,10 +32,10 @@ public class EmployeeMapper {
 
     /**
      * This method is used to convert employeeeEntity to employeeDto
-     * @param employee     employee which we have convert to employeeDto
+     * @param employee     employee which we have to convert to employeeDto
      * @return employeeDto   employee dto which we have converted
      */
-    public static EmployeeDto convertToDto(Employee employee) {
+    public static EmployeeDto convertEntityToDto(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
         employeeDto.setId(employee.getEmployeeId());
         employeeDto.setName(employee.getEmployeeName());
@@ -44,6 +44,7 @@ public class EmployeeMapper {
         employeeDto.setMailId(employee.getMailId());
         employeeDto.setExperience(employee.getExperience());
         employeeDto.setDepartmentName(employee.getDepartment().getDepartmentName());
+        employeeDto.setProjects(employee.getProjectDetails());
         return employeeDto;
     }
 }

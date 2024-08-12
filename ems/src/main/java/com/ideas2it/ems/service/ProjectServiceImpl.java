@@ -1,11 +1,14 @@
 package com.ideas2it.ems.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.ideas2it.ems.dao.ProjectDao;
-import com.ideas2it.ems.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ideas2it.ems.dao.ProjectDao;
+import com.ideas2it.ems.model.Employee;
+import com.ideas2it.ems.model.Project;
 
 /**
  * <p>
@@ -26,25 +29,31 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> getProjects() {
-        return (List<Project>) projectDao.findAll();
+        return (List<Project>) projectDao.findByIsDeletedFalse();
     }
 
     @Override
     public Project getProjectById(int projectId) {
-        return projectDao.findById(projectId).orElseThrow(() -> new IllegalArgumentException(("Project not found with ID : " + projectId)));
+        return projectDao.findByProjectIdAndIsDeletedFalse(projectId);
     }
 
     @Override
     public Project updateProject(int projectId, Project project) {
-        Project projectObject = projectDao.findById(projectId).orElseThrow(() -> new IllegalArgumentException(("Project not found with ID:" + projectId)));
+        Project projectObject = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
         projectObject.setProjectName(project.getProjectName());
         return projectDao.save(projectObject);
     }
 
     @Override
     public void deleteProject(int projectId) {
-        Project project = projectDao.findById(projectId).orElseThrow(() -> new IllegalArgumentException(("Project not found with ID:" + projectId)));
+        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
         project.setIsDeleted(true);
         projectDao.save(project);
+    }
+
+    @Override
+    public List<Employee> getEmployeesByProject(int projectId) {
+        Project project = getProjectById(projectId);
+        return new ArrayList<>(project.getEmployees());
     }
 }
