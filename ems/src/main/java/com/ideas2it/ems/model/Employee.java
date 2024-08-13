@@ -74,7 +74,7 @@ public class Employee {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "mail_id")
+    @Column(name = "mail_id", unique = true)
     private String mailId;
 
     @Column(name = "experience")

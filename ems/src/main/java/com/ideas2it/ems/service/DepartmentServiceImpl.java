@@ -50,7 +50,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public boolean isDepartmentPresent(int departmentId) {
         Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
-        return null == department;
+        return null != department;
     }
 
     @Override

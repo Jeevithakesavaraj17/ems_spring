@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ideas2it.ems.dto.CreateEmployeeDto;
 import com.ideas2it.ems.dto.EmployeeDto;
 
 /**
@@ -21,10 +22,10 @@ public interface EmployeeService {
      *     Add employee details
      * </p>
      *
-     * @param employeeDto       {@link EmployeeDto}
+     * @param employeeDto       {@link CreateEmployeeDto}
      * @return EmployeeDto        If employee is added, return employee object
      */
-    EmployeeDto addEmployee(EmployeeDto employeeDto);
+    CreateEmployeeDto addEmployee(EmployeeDto employeeDto);
 
     /**
      * <p>
@@ -44,6 +45,16 @@ public interface EmployeeService {
      * @return EmployeeDto      {@link EmployeeDto}
      */
     EmployeeDto getEmployeeById(int employeeId);
+
+    /**
+     * <p>
+     *     Checks employee is present or not
+     * </p>
+     *
+     * @param employeeId    Id of the employee to be searched
+     * @return boolean      If employee is present, return true or else return false
+     */
+    boolean isEmployeePresent(int employeeId);
 
     /**
      * <p>

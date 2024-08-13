@@ -43,7 +43,7 @@ public class Department {
     @Column(name = "id")
     private int departmentId;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String departmentName;
 
     @Column(name = "is_deleted")

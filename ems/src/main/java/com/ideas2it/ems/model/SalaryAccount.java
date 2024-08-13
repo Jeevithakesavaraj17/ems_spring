@@ -35,10 +35,10 @@ public class SalaryAccount {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "account_number")
+    @Column(name = "account_number", unique = true)
     private long accountNumber;
 
-    @Column(name = "ifsc_code")
+    @Column(name = "ifsc_code", unique = true)
     private String ifscCode;
 
     public SalaryAccount(long accountNumber, String ifscCode) {

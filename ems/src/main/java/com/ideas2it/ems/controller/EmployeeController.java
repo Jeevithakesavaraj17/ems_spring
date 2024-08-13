@@ -2,6 +2,8 @@ package com.ideas2it.ems.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ideas2it.ems.dto.CreateEmployeeDto;
 import com.ideas2it.ems.dto.EmployeeDto;
 import com.ideas2it.ems.service.EmployeeService;
 import com.ideas2it.ems.service.DepartmentService;
@@ -31,6 +34,7 @@ import com.ideas2it.ems.service.ProjectService;
 @Controller
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
+    private static final Logger logger = LogManager.getLogger();
     @Autowired
     private EmployeeService employeeService;
     @Autowired
@@ -44,11 +48,12 @@ public class EmployeeController {
      * </p>
      *
      * @param employeeDto          {@link EmployeeDto}
-     * @return savedEmployeeDto    {@link EmployeeDto} employee details which we have added
+     * @return savedEmployeeDto    {@link CreateEmployeeDto} employee details which we have added
      */
     @PostMapping
-    public ResponseEntity<EmployeeDto> addEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
-        EmployeeDto savedEmployeeDto = employeeService.addEmployee(employeeDto);
+    public ResponseEntity<CreateEmployeeDto> addEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
+        CreateEmployeeDto savedEmployeeDto = employeeService.addEmployee(employeeDto);
+        logger.info("Employee added successfully :{}", employeeDto.getName());
         return new ResponseEntity<>(savedEmployeeDto, HttpStatus.CREATED);
     }
 
@@ -67,7 +72,24 @@ public class EmployeeController {
 
     /**
      * <p>
-     * Get Id of the employee and update their details.
+     *     Get Employee by employee Id
+     * </p>
+     *
+     * @param employeeId     Id of the employee to be searched
+     * @return EmployeeDto    {@link EmployeeDto}
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") int employeeId) {
+        if (employeeService.isEmployeePresent(employeeId)) {
+            return new ResponseEntity<>(employeeService.getEmployeeById(employeeId), HttpStatus.OK);
+        }
+        logger.warn("Employee is not found for this id :{}", employeeId);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * <p>
+     *      Get Id of the employee and update their details.
      * </p>
      *
      * @param employeeDto     {@link EmployeeDto}
@@ -75,8 +97,11 @@ public class EmployeeController {
      */
     @PutMapping
     public ResponseEntity<EmployeeDto> updateEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
-        EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeDetails(employeeDto);
-        return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
+        if (employeeService.isEmployeePresent(employeeDto.getId())) {
+            EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeDetails(employeeDto);
+            return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -87,22 +112,35 @@ public class EmployeeController {
      * @param employeeId    Id of the employee which we have to delete
      */
     @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable("id") int employeeId) {
-        employeeService.deleteEmployee(employeeId);
+    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") int employeeId) {
+        if (employeeService.isEmployeePresent(employeeId)) {
+            employeeService.deleteEmployee(employeeId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
      * <p>
      *     This method is for add project to employee
      * </p>
-     * @param employeeId     Id of the employee
+     * @param employeeId     Id of the employee to whom we have to assign the project
      * @param projectId      Id of the project
      * @return  employeeDto   {@link EmployeeDto}
      */
     @PutMapping("/{employeeId}/project/{projectId}")
     public ResponseEntity<EmployeeDto> addProjectToEmployee(@PathVariable int employeeId, @PathVariable int projectId) {
-        EmployeeDto employeeDto = employeeService.assignProjectToEmployee(employeeId, projectId);
-        return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
+        if (employeeService.isEmployeePresent(employeeId)) {
+            if (projectService.isProjectPresent(projectId)) {
+                EmployeeDto employeeDto = employeeService.assignProjectToEmployee(employeeId, projectId);
+                logger.info("Employee{}is assigned in project{}", employeeId, projectId);
+                return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
+            }
+            logger.warn("Project is not found for this id: {}", projectId);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        logger.warn("Employee is not found for this id: {}", employeeId);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }

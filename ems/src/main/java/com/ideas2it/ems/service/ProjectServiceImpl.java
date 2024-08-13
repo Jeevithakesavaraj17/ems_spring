@@ -50,6 +50,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public boolean isProjectPresent(int projectId) {
+        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+        return null != project;
+    }
+
+    @Override
     public ProjectDto updateProject(int projectId, ProjectDto projectDto) {
         Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
         project.setProjectName(project.getProjectName());

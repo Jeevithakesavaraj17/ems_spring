@@ -3,14 +3,15 @@ package com.ideas2it.ems.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ideas2it.ems.mapper.DepartmentMapper;
-import com.ideas2it.ems.mapper.ProjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ideas2it.ems.dto.CreateEmployeeDto;
 import com.ideas2it.ems.dao.EmployeeDao;
 import com.ideas2it.ems.dto.EmployeeDto;
+import com.ideas2it.ems.mapper.DepartmentMapper;
 import com.ideas2it.ems.mapper.EmployeeMapper;
+import com.ideas2it.ems.mapper.ProjectMapper;
 import com.ideas2it.ems.model.Employee;
 import com.ideas2it.ems.model.Project;
 import com.ideas2it.ems.model.Department;
@@ -35,14 +36,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     private ProjectService projectService;
 
     @Override
-    public EmployeeDto addEmployee(EmployeeDto employeeDto) {
+    public CreateEmployeeDto addEmployee(EmployeeDto employeeDto) {
         Department department = DepartmentMapper.convertDtoToEntity(departmentService.getDepartmentById(employeeDto.getDepartmentId()));
         SalaryAccount salaryAccount = new SalaryAccount(employeeDto.getAccountNumber(), employeeDto.getIfscCode());
         Employee employee = EmployeeMapper.convertDtoToEntity(employeeDto);
         employee.setDepartment(department);
         employee.setSalaryAccount(salaryAccount);
         Employee savedEmployee = employeeDao.save(employee);
-        return EmployeeMapper.convertEntityToDto(savedEmployee);
+        return EmployeeMapper.convertEntityToCreateEmployeeDto(savedEmployee);
     }
 
     @Override
@@ -58,6 +59,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto getEmployeeById(int employeeId) {
         return EmployeeMapper.convertEntityToDto(employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeId));
+    }
+
+    @Override
+    public boolean isEmployeePresent(int employeeId) {
+        Employee employee = employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeId);
+        return null != employee;
     }
 
     @Override

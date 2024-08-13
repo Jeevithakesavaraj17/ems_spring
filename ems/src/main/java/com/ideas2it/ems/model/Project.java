@@ -39,7 +39,7 @@ public class Project {
     @Column(name = "id")
     private int projectId;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String projectName;
 
     @Column(name = "is_deleted")

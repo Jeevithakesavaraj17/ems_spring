@@ -1,5 +1,6 @@
 package com.ideas2it.ems.mapper;
 
+import com.ideas2it.ems.dto.CreateEmployeeDto;
 import com.ideas2it.ems.dto.EmployeeDto;
 import com.ideas2it.ems.model.Employee;
 
@@ -16,8 +17,8 @@ public class EmployeeMapper {
      * <p>
      *     This method is for conversion of EmployeeDto to EmployeeEntity
      * </p>
-     * @param employeeDto   employee details which we have to convert to employee entity
-     * @return employee     employee which we have converted to entity
+     * @param employeeDto   {@link EmployeeDto}which we have to convert to employee entity
+     * @return employee     which we have converted to entity
      */
     public static Employee convertDtoToEntity(EmployeeDto employeeDto) {
         Employee employee = new Employee();
@@ -31,9 +32,9 @@ public class EmployeeMapper {
     }
 
     /**
-     * This method is used to convert employeeeEntity to employeeDto
+     * This method is used to convert employee Entity to employeeDto
      * @param employee     employee which we have to convert to employeeDto
-     * @return employeeDto   employee dto which we have converted
+     * @return employeeDto   {@link EmployeeDto} which we have converted
      */
     public static EmployeeDto convertEntityToDto(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
@@ -45,6 +46,23 @@ public class EmployeeMapper {
         employeeDto.setExperience(employee.getExperience());
         employeeDto.setDepartmentName(employee.getDepartment().getDepartmentName());
         employeeDto.setProjects(employee.getProjectDetails());
+        return employeeDto;
+    }
+
+    /**
+     * This method is used to convert employee Entity to employeeDto
+     * @param employee     employee which we have to convert to employeeDto
+     * @return employeeDto   {@link CreateEmployeeDto}which we have converted
+     */
+    public static CreateEmployeeDto convertEntityToCreateEmployeeDto(Employee employee) {
+        CreateEmployeeDto employeeDto = new CreateEmployeeDto();
+        employeeDto.setId(employee.getEmployeeId());
+        employeeDto.setName(employee.getEmployeeName());
+        employeeDto.setAge(employee.getAge());
+        employeeDto.setPhoneNumber(employee.getPhoneNumber());
+        employeeDto.setMailId(employee.getMailId());
+        employeeDto.setExperience(employee.getExperience());
+        employeeDto.setDepartmentName(employee.getDepartment().getDepartmentName());
         return employeeDto;
     }
 }

@@ -45,7 +45,7 @@ public class DepartmentController {
     @PostMapping
     public ResponseEntity<DepartmentDto> addDepartment(@RequestBody DepartmentDto departmentDto) {
         DepartmentDto savedDepartmentDto = departmentService.addDepartment(departmentDto);
-        logger.info("Employee added successfully{}", savedDepartmentDto.getName());
+        logger.info("Department added successfully{}", savedDepartmentDto.getName());
         return new ResponseEntity<>(savedDepartmentDto, HttpStatus.CREATED);
     }
 
@@ -71,7 +71,7 @@ public class DepartmentController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable("id") int departmentId) {
-        if (!departmentService.isDepartmentPresent(departmentId)) {
+        if (departmentService.isDepartmentPresent(departmentId)) {
             DepartmentDto departmentDto = departmentService.getDepartmentById(departmentId);
             return new ResponseEntity<>(departmentDto, HttpStatus.OK);
         }

@@ -47,6 +47,16 @@ public interface ProjectService {
 
     /**
      * <p>
+     *     Checks project is present or not
+     * </p>
+     *
+     * @param projectId   ID of the project to be checked
+     * @return boolean    If project is present, return true or else return false
+     */
+    boolean isProjectPresent(int projectId);
+
+    /**
+     * <p>
      * Update project name in the database
      * </p>
      *
