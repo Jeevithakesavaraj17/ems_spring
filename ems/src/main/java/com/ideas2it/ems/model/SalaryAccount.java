@@ -41,6 +41,11 @@ public class SalaryAccount {
     @Column(name = "ifsc_code")
     private String ifscCode;
 
+    public SalaryAccount(long accountNumber, String ifscCode) {
+        this.accountNumber = accountNumber;
+        this.ifscCode = ifscCode;
+    }
+
     @Override
     public String toString() {
         return "Account Number : " + accountNumber

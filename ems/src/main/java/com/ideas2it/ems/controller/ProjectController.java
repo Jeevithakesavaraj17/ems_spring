@@ -1,6 +1,5 @@
 package com.ideas2it.ems.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ideas2it.ems.dto.EmployeeDto;
 import com.ideas2it.ems.dto.ProjectDto;
-import com.ideas2it.ems.mapper.EmployeeMapper;
-import com.ideas2it.ems.mapper.ProjectMapper;
-import com.ideas2it.ems.model.Employee;
-import com.ideas2it.ems.model.Project;
 import com.ideas2it.ems.service.ProjectService;
 
 /**
@@ -32,7 +27,7 @@ import com.ideas2it.ems.service.ProjectService;
  * @author Jeevithakesavaraj
  */
 @RestController
-@RequestMapping("/api/v1/project")
+@RequestMapping("/api/v1/projects")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -48,8 +43,7 @@ public class ProjectController {
      */
     @PostMapping
     public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) {
-        Project project = ProjectMapper.convertToEntity(projectDto);
-        return new ResponseEntity<>(ProjectMapper.convertToDto(projectService.addProject(project)), HttpStatus.CREATED);
+        return new ResponseEntity<>(projectService.addProject(projectDto), HttpStatus.CREATED);
     }
 
     /**
@@ -61,12 +55,7 @@ public class ProjectController {
      */
     @GetMapping
     public ResponseEntity<List<ProjectDto>> displayProjects() {
-        List<ProjectDto> projectsDto = new ArrayList<>();
-        List<Project> projects = projectService.getProjects();
-        for (Project project : projects) {
-            projectsDto.add(ProjectMapper.convertToDto(project));
-        }
-        return new ResponseEntity<>(projectsDto, HttpStatus.OK);
+        return new ResponseEntity<>(projectService.getProjects(), HttpStatus.OK);
     }
 
     /**
@@ -76,7 +65,7 @@ public class ProjectController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") int projectId) {
-        return new ResponseEntity<>(ProjectMapper.convertToDto(projectService.getProjectById(projectId)), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.getProjectById(projectId), HttpStatus.OK);
     }
 
     /**
@@ -90,8 +79,7 @@ public class ProjectController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<ProjectDto> updateProject(@PathVariable("id") int projectId, @RequestBody ProjectDto projectDto) {
-        Project project = ProjectMapper.convertToEntity(projectDto);
-        return new ResponseEntity<>(ProjectMapper.convertToDto(projectService.updateProject(projectId, project)), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.updateProject(projectId, projectDto), HttpStatus.OK);
     }
 
     /**
@@ -114,12 +102,8 @@ public class ProjectController {
      * @param projectId     Id of the project which we want list of employees
      * @return List<Employee>   list of employees in particular project
      */
-    public ResponseEntity<List<EmployeeDto>> getEmployeesByProject(int projectId) {
-        List<EmployeeDto> employeesDto = new ArrayList<>();
-        List<Employee> employees = projectService.getEmployeesByProject(projectId);
-        for (Employee employee : employees) {
-            employeesDto.add(EmployeeMapper.convertToDto(employee));
-        }
-        return new ResponseEntity<>(employeesDto, HttpStatus.OK);
+    @GetMapping("/employees/{id}")
+    public ResponseEntity<List<EmployeeDto>> getEmployeesByProject(@PathVariable("id") int projectId) {
+        return new ResponseEntity<>(projectService.getEmployeesByProject(projectId), HttpStatus.OK);
     }
 }

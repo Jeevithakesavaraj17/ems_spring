@@ -23,8 +23,8 @@ public interface DepartmentService {
      * Add Department details
      * </p>
      *
-     * @param department          department details
-     * @return Department         If department added, return department
+     * @param departmentDto          {@link DepartmentDto}
+     * @return DepartmentDto         If department added, return department
      */
     DepartmentDto addDepartment(DepartmentDto departmentDto);
 
@@ -39,10 +39,20 @@ public interface DepartmentService {
 
     /**
      * <p>
+     *     Checks if the department is present or not
+     * </p>
+     *
+     * @param departmentId     Id of the department which we have to check
+     * @return boolean         If department is present, return true or return false
+     */
+    boolean isDepartmentPresent(int departmentId);
+
+    /**
+     * <p>
      * Get department by departmentId
      * </p>
      *
-     * @param departmentId ID of the department
+     * @param departmentId     ID of the department
      * @return department      ID department is present, return true or else return false.
      */
     DepartmentDto getDepartmentById(int departmentId);
@@ -52,11 +62,10 @@ public interface DepartmentService {
      * Update department name in the database
      * </p>
      *
-     * @param departmentId Id of the department whhich we have to update
-     * @param department   DepartmentName
-     * @return Department  If department is updated, returns department object
+     * @param departmentDto {@link DepartmentDto}
+     * @return DepartmentDto  If department is updated, returns department object
      */
-    DepartmentDto updateDepartment(int departmentId, DepartmentDto departmentDto);
+    DepartmentDto updateDepartment(DepartmentDto departmentDto);
 
     /**
      * <p>

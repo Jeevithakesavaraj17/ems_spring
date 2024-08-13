@@ -3,6 +3,8 @@ package com.ideas2it.ems.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ideas2it.ems.mapper.DepartmentMapper;
+import com.ideas2it.ems.mapper.ProjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +31,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    private ProjectService projectService;
+
     @Override
     public EmployeeDto addEmployee(EmployeeDto employeeDto) {
-        Department department = departmentService.getDepartmentById(employeeDto.getDepartmentId());
+        Department department = DepartmentMapper.convertDtoToEntity(departmentService.getDepartmentById(employeeDto.getDepartmentId()));
         SalaryAccount salaryAccount = new SalaryAccount(employeeDto.getAccountNumber(), employeeDto.getIfscCode());
-        Employee employee = EmployeeMapper.convertToEntity(employeeDto);
+        Employee employee = EmployeeMapper.convertDtoToEntity(employeeDto);
         employee.setDepartment(department);
         employee.setSalaryAccount(salaryAccount);
-        return EmployeeMapper.convertToDto(employeeDao.save(employee));
+        Employee savedEmployee = employeeDao.save(employee);
+        return EmployeeMapper.convertEntityToDto(savedEmployee);
     }
 
     @Override
@@ -44,38 +50,40 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> employees = employeeDao.findByIsDeletedFalse();
         List<EmployeeDto> employeesDto = new ArrayList<>();
         for (Employee employee : employees) {
-            employeesDto.add(EmployeeMapper.convertToDto(employee));
+            employeesDto.add(EmployeeMapper.convertEntityToDto(employee));
         }
         return employeesDto;
     }
 
     @Override
-    public Employee getEmployeeById(int employeeId) {
-        return employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeId);
+    public EmployeeDto getEmployeeById(int employeeId) {
+        return EmployeeMapper.convertEntityToDto(employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeId));
     }
 
     @Override
-    public EmployeeDto updateEmployeeDetails(int employeeId, EmployeeDto employeeDto) {
-        Employee employee = employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeId);
+    public EmployeeDto updateEmployeeDetails(EmployeeDto employeeDto) {
+        Employee employee = employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeDto.getId());
         employee.setEmployeeName(employeeDto.getName());
         employee.setDateOfBirth(employeeDto.getDateOfBirth());
         employee.setPhoneNumber(employeeDto.getPhoneNumber());
         employee.setMailId(employeeDto.getMailId());
         employee.setExperience(employeeDto.getExperience());
-        return EmployeeMapper.convertToDto(employeeDao.save(employee));
+        return EmployeeMapper.convertEntityToDto(employeeDao.save(employee));
     }
 
     @Override
     public void deleteEmployee(int employeeId) {
         Employee employee = employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeId);
-        employee.setIsDeleted(true);
+        employee.setDeleted(true);
         employeeDao.save(employee);
     }
 
     @Override
-    public Employee assignProjectToEmployee(int employeeId, Project project) {
-        Employee employee = getEmployeeById(employeeId);
+    public EmployeeDto assignProjectToEmployee(int employeeId, int projectId) {
+        Employee employee = employeeDao.findByEmployeeIdAndIsDeletedFalse(employeeId);
+        Project project = ProjectMapper.convertDtoToEntity(projectService.getProjectById(projectId));
         employee.getProjects().add(project);
-        return employeeDao.save(employee);
+        Employee savedEmployee = employeeDao.save(employee);
+        return EmployeeMapper.convertEntityToDto(savedEmployee);
     }
 }

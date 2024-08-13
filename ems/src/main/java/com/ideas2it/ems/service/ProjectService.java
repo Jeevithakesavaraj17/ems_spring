@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ideas2it.ems.model.Employee;
-import com.ideas2it.ems.model.Project;
+import com.ideas2it.ems.dto.EmployeeDto;
+import com.ideas2it.ems.dto.ProjectDto;
 
 /**
  * <p>
@@ -21,19 +21,19 @@ public interface ProjectService {
      * Add project to the list
      * </p>
      *
-     * @param project  project details which we have to add
-     * @return Project     If project added, return project object
+     * @param projectDto  {@link ProjectDto}
+     * @return ProjectDto     If project added, return project object
      */
-    Project addProject(Project project);
+    ProjectDto addProject(ProjectDto projectDto);
 
     /**
      * <p>
      * Get list of projects
      * </p>
      *
-     * @return List<Project>    list of projects
+     * @return List<ProjectDto>    {@link ProjectDto} list of projects
      */
-    List<Project> getProjects();
+    List<ProjectDto> getProjects();
 
     /**
      * <p>
@@ -41,9 +41,9 @@ public interface ProjectService {
      * </p>
      *
      * @param projectId   ID of the project
-     * @return Project    If project present, return project object or else return null.
+     * @return ProjectDto    If project present, return project object or else return null.
      */
-    Project getProjectById(int projectId);
+    ProjectDto getProjectById(int projectId);
 
     /**
      * <p>
@@ -51,10 +51,10 @@ public interface ProjectService {
      * </p>
      *
      * @param projectId  Id of the project who we have to update the details
-     * @param project   project details which we have to update
+     * @param projectDto   project details which we have to update
      * @return Project  If project is updated, returns project object
      */
-    Project updateProject(int projectId, Project project);
+    ProjectDto updateProject(int projectId, ProjectDto projectDto);
 
     /**
      * <p>
@@ -73,5 +73,5 @@ public interface ProjectService {
      * @param projectId   Id of the project
      * @return List<Employee>    list of employees in that project
      */
-    List<Employee> getEmployeesByProject(int projectId);
+    List<EmployeeDto> getEmployeesByProject(int projectId);
 }

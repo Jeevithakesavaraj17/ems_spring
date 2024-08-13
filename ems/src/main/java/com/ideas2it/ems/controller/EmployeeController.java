@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ideas2it.ems.dto.EmployeeDto;
-import com.ideas2it.ems.mapper.EmployeeMapper;
-import com.ideas2it.ems.model.Project;
 import com.ideas2it.ems.service.EmployeeService;
 import com.ideas2it.ems.service.DepartmentService;
 import com.ideas2it.ems.service.ProjectService;
@@ -46,7 +44,7 @@ public class EmployeeController {
      * </p>
      *
      * @param employeeDto          {@link EmployeeDto}
-     * @return savedEmployeeDto    employee details which we have added
+     * @return savedEmployeeDto    {@link EmployeeDto} employee details which we have added
      */
     @PostMapping
     public ResponseEntity<EmployeeDto> addEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
@@ -59,7 +57,7 @@ public class EmployeeController {
      * Display list of employees
      * </p>
      *
-     * @return employeesDto   List of employee Dto
+     * @return employeesDto   {@link EmployeeDto} List of employee Dto
      */
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> displayEmployees() {
@@ -72,12 +70,12 @@ public class EmployeeController {
      * Get Id of the employee and update their details.
      * </p>
      *
-     * @param employeeId     Id of the employee
-     * @return EmployeeDto   employee details which we have updated
+     * @param employeeDto     {@link EmployeeDto}
+     * @return EmployeeDto   {@link EmployeeDto} employee details which we have updated
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDto> updateEmployeeDetails(@PathVariable("id") int employeeId, @RequestBody EmployeeDto employeeDto) {
-        EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeDetails(employeeId, employeeDto);
+    @PutMapping
+    public ResponseEntity<EmployeeDto> updateEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
+        EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeDetails(employeeDto);
         return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
     }
 
@@ -93,10 +91,18 @@ public class EmployeeController {
         employeeService.deleteEmployee(employeeId);
     }
 
+    /**
+     * <p>
+     *     This method is for add project to employee
+     * </p>
+     * @param employeeId     Id of the employee
+     * @param projectId      Id of the project
+     * @return  employeeDto   {@link EmployeeDto}
+     */
     @PutMapping("/{employeeId}/project/{projectId}")
     public ResponseEntity<EmployeeDto> addProjectToEmployee(@PathVariable int employeeId, @PathVariable int projectId) {
-        Project project = projectService.getProjectById(projectId);
-        EmployeeDto employeeDto = EmployeeMapper.convertToDto(employeeService.assignProjectToEmployee(employeeId, project));
+        EmployeeDto employeeDto = employeeService.assignProjectToEmployee(employeeId, projectId);
         return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
     }
+
 }

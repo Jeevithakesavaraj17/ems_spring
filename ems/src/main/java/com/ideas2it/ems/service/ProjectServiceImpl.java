@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ideas2it.ems.dao.ProjectDao;
+import com.ideas2it.ems.dto.ProjectDto;
+import com.ideas2it.ems.dto.EmployeeDto;
+import com.ideas2it.ems.mapper.EmployeeMapper;
+import com.ideas2it.ems.mapper.ProjectMapper;
 import com.ideas2it.ems.model.Employee;
 import com.ideas2it.ems.model.Project;
 
@@ -23,37 +27,51 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectDao projectDao;
 
     @Override
-    public Project addProject(Project project) {
-        return projectDao.save(project);
+    public ProjectDto addProject(ProjectDto projectDto) {
+        Project project = ProjectMapper.convertDtoToEntity(projectDto);
+        Project savedProject = projectDao.save(project);
+        return ProjectMapper.convertEntityToDto(savedProject);
     }
 
     @Override
-    public List<Project> getProjects() {
-        return (List<Project>) projectDao.findByIsDeletedFalse();
+    public List<ProjectDto> getProjects() {
+        List<ProjectDto> projectsDto = new ArrayList<>();
+        List<Project> projects = projectDao.findByIsDeletedFalse();
+        for (Project project : projects) {
+            projectsDto.add(ProjectMapper.convertEntityToDto(project));
+        }
+        return projectsDto;
     }
 
     @Override
-    public Project getProjectById(int projectId) {
-        return projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+    public ProjectDto getProjectById(int projectId) {
+        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+        return ProjectMapper.convertEntityToDto(project);
     }
 
     @Override
-    public Project updateProject(int projectId, Project project) {
-        Project projectObject = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
-        projectObject.setProjectName(project.getProjectName());
-        return projectDao.save(projectObject);
+    public ProjectDto updateProject(int projectId, ProjectDto projectDto) {
+        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+        project.setProjectName(project.getProjectName());
+        Project savedProject = projectDao.save(project);
+        return ProjectMapper.convertEntityToDto(savedProject);
     }
 
     @Override
     public void deleteProject(int projectId) {
         Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
-        project.setIsDeleted(true);
+        project.setDeleted(true);
         projectDao.save(project);
     }
 
     @Override
-    public List<Employee> getEmployeesByProject(int projectId) {
-        Project project = getProjectById(projectId);
-        return new ArrayList<>(project.getEmployees());
+    public List<EmployeeDto> getEmployeesByProject(int projectId) {
+        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+        List<Employee> employees = new ArrayList<>(project.getEmployees());
+        List<EmployeeDto> employeesDtos = new ArrayList<>();
+        for (Employee employee : employees) {
+            employeesDtos.add(EmployeeMapper.convertEntityToDto(employee));
+        }
+        return employeesDtos;
     }
 }

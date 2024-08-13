@@ -33,7 +33,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDto addDepartment(DepartmentDto departmentDto) {
-        Department department = DepartmentMapper.convertToEntity(departmentDto);
+        Department department = DepartmentMapper.convertDtoToEntity(departmentDto);
         return DepartmentMapper.convertEntityToDto(departmentDao.save(department));
     }
 
@@ -48,22 +48,28 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public boolean isDepartmentPresent(int departmentId) {
+        Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
+        return null == department;
+    }
+
+    @Override
     public DepartmentDto getDepartmentById(int departmentId) {
         Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
         return DepartmentMapper.convertEntityToDto(department);
     }
 
     @Override
-    public Department updateDepartment(int departmentId, Department department) {
-        Department departmentObject = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
-        departmentObject.setDepartmentName(department.getDepartmentName());
-        return departmentDao.save(departmentObject);
+    public DepartmentDto updateDepartment(DepartmentDto departmentDto) {
+        Department departmentObject = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentDto.getId());
+        departmentObject.setDepartmentName(departmentDto.getName());
+        return DepartmentMapper.convertEntityToDto(departmentDao.save(departmentObject));
     }
 
     @Override
     public void deleteDepartment(int id) {
         Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(id);
-        department.setIsDeleted(true);
+        department.setDeleted(true);
         departmentDao.save(department);
     }
 
@@ -71,7 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<EmployeeDto> getEmployeesByDepartment(int departmentId) {
         Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
         List<Employee> employees = new ArrayList<>(department.getEmployees());
-        List<EmployeeDto> employeesDto = null;
+        List<EmployeeDto> employeesDto = new ArrayList<>();
         for (Employee employee : employees) {
             employeesDto.add(EmployeeMapper.convertEntityToDto(employee));
         }
