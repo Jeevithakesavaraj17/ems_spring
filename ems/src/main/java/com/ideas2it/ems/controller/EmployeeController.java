@@ -2,6 +2,7 @@ package com.ideas2it.ems.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class EmployeeController {
      * @return savedEmployeeDto    {@link CreateEmployeeDto} employee details which we have added
      */
     @PostMapping
-    public ResponseEntity<CreateEmployeeDto> addEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<CreateEmployeeDto> addEmployeeDetails(@Valid @RequestBody EmployeeDto employeeDto) {
         CreateEmployeeDto savedEmployeeDto = employeeService.addEmployee(employeeDto);
         logger.info("Employee added successfully :{}", employeeDto.getName());
         return new ResponseEntity<>(savedEmployeeDto, HttpStatus.CREATED);
@@ -80,11 +81,7 @@ public class EmployeeController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") int employeeId) {
-        if (employeeService.isEmployeePresent(employeeId)) {
-            return new ResponseEntity<>(employeeService.getEmployeeById(employeeId), HttpStatus.OK);
-        }
-        logger.warn("Employee is not found for this id :{}", employeeId);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(employeeService.getEmployeeById(employeeId), HttpStatus.OK);
     }
 
     /**
@@ -96,12 +93,10 @@ public class EmployeeController {
      * @return EmployeeDto   {@link EmployeeDto} employee details which we have updated
      */
     @PutMapping
-    public ResponseEntity<EmployeeDto> updateEmployeeDetails(@RequestBody EmployeeDto employeeDto) {
-        if (employeeService.isEmployeePresent(employeeDto.getId())) {
-            EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeDetails(employeeDto);
-            return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<EmployeeDto> updateEmployeeDetails(@Valid @RequestBody EmployeeDto employeeDto) {
+        EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeDetails(employeeDto);
+        logger.info("Employee details updated successfully for this Id: {}", employeeDto.getId());
+        return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
     }
 
     /**
@@ -113,11 +108,9 @@ public class EmployeeController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable("id") int employeeId) {
-        if (employeeService.isEmployeePresent(employeeId)) {
-            employeeService.deleteEmployee(employeeId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        employeeService.deleteEmployee(employeeId);
+        logger.info("Employee deleted successfully: {}", employeeId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -130,17 +123,9 @@ public class EmployeeController {
      */
     @PutMapping("/{employeeId}/project/{projectId}")
     public ResponseEntity<EmployeeDto> addProjectToEmployee(@PathVariable int employeeId, @PathVariable int projectId) {
-        if (employeeService.isEmployeePresent(employeeId)) {
-            if (projectService.isProjectPresent(projectId)) {
-                EmployeeDto employeeDto = employeeService.assignProjectToEmployee(employeeId, projectId);
-                logger.info("Employee{}is assigned in project{}", employeeId, projectId);
-                return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
-            }
-            logger.warn("Project is not found for this id: {}", projectId);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        logger.warn("Employee is not found for this id: {}", employeeId);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        EmployeeDto employeeDto = employeeService.assignProjectToEmployee(employeeId, projectId);
+        logger.info("Employee{}is assigned in project{}", employeeId, projectId);
+        return new ResponseEntity<>(employeeDto, HttpStatus.OK);
     }
 
 }

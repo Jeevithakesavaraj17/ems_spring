@@ -1,7 +1,5 @@
 package com.ideas2it.ems.dto;
 
-import java.time.LocalDate;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,12 @@
 package com.ideas2it.ems.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,15 +39,32 @@ import java.time.LocalDate;
 @Setter
 public class EmployeeDto {
     private int id;
+
+    @NotBlank
     private String name;
+
+    @Past
     private LocalDate dateOfBirth;
     private String age;
     private int departmentId;
+
     private String departmentName;
+
+    @NotBlank
+    @Size(min = 10, max = 10, message = "Number should contain 10 digits.")
+    @Pattern(regexp = "^[6-9]{1}[0-9]{9}$")
     private String phoneNumber;
+
+    @Email
     private String mailId;
+
+    @Min(value = 0)
+    @Max(value = 50)
     private int experience;
+
     private long accountNumber;
+
+    @NotBlank
     private String ifscCode;
     private String projects;
 }

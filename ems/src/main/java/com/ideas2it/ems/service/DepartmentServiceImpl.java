@@ -2,8 +2,11 @@ package com.ideas2it.ems.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import com.ideas2it.ems.mapper.EmployeeMapper;
+import com.ideas2it.ems.exception.EmployeeException;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +14,7 @@ import com.ideas2it.ems.dao.DepartmentDao;
 import com.ideas2it.ems.dto.DepartmentDto;
 import com.ideas2it.ems.dto.EmployeeDto;
 import com.ideas2it.ems.mapper.DepartmentMapper;
+import com.ideas2it.ems.mapper.EmployeeMapper;
 import com.ideas2it.ems.model.Department;
 import com.ideas2it.ems.model.Employee;
 
@@ -24,16 +28,16 @@ import com.ideas2it.ems.model.Employee;
  */
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
+    private static final Logger logger = LogManager.getLogger();
     @Autowired
-    private final DepartmentDao departmentDao;
-
-    public DepartmentServiceImpl(DepartmentDao departmentDao) {
-        this.departmentDao = departmentDao;
-    }
+    private DepartmentDao departmentDao;
 
     @Override
     public DepartmentDto addDepartment(DepartmentDto departmentDto) {
         Department department = DepartmentMapper.convertDtoToEntity(departmentDto);
+        if (departmentDao.existsByDepartmentName(departmentDto.getName())) {
+            throw new EmployeeException("This department is already exists.");
+        }
         return DepartmentMapper.convertEntityToDto(departmentDao.save(department));
     }
 
@@ -48,14 +52,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean isDepartmentPresent(int departmentId) {
-        Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
-        return null != department;
-    }
-
-    @Override
     public DepartmentDto getDepartmentById(int departmentId) {
         Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
+        if (null == department) {
+            logger.warn("No department found for this Id: " + departmentId);
+            throw new NoSuchElementException("Department is not found for this Id: " + departmentId);
+        }
         return DepartmentMapper.convertEntityToDto(department);
     }
 

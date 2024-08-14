@@ -2,6 +2,9 @@ package com.ideas2it.ems.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +32,9 @@ import com.ideas2it.ems.service.ProjectService;
 @RestController
 @RequestMapping("/api/v1/projects")
 public class ProjectController {
+    private static final Logger logger = LogManager.getLogger();
     @Autowired
     private ProjectService projectService;
-
 
     /**
      * <p>
@@ -42,8 +45,10 @@ public class ProjectController {
      * @return   ProjectDto  ID and name of theproject which we have added
      */
     @PostMapping
-    public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) {
-        return new ResponseEntity<>(projectService.addProject(projectDto), HttpStatus.CREATED);
+    public ResponseEntity<ProjectDto> addProject(@Valid @RequestBody ProjectDto projectDto) {
+        ProjectDto savedProjectDto = projectService.addProject(projectDto);
+        logger.info("Project added successfully :" + savedProjectDto.getName());
+        return new ResponseEntity<>(savedProjectDto, HttpStatus.CREATED);
     }
 
     /**
@@ -73,13 +78,14 @@ public class ProjectController {
      * Update project name by getting project Id and new name for the project
      * </p>
      *
-     * @param  projectId        Id of the project
      * @param projectDto       new name for the project
      * @return ProjectDto      details of project which we have updated
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<ProjectDto> updateProject(@PathVariable("id") int projectId, @RequestBody ProjectDto projectDto) {
-        return new ResponseEntity<>(projectService.updateProject(projectId, projectDto), HttpStatus.OK);
+    @PatchMapping
+    public ResponseEntity<ProjectDto> updateProject(@Valid @RequestBody ProjectDto projectDto) {
+        ProjectDto updatedProjectDto = projectService.updateProject(projectDto);
+        logger.info("Project name updated successfully for this Id: " + updatedProjectDto.getId());
+        return new ResponseEntity<>(updatedProjectDto, HttpStatus.OK);
     }
 
     /**
@@ -90,8 +96,10 @@ public class ProjectController {
      * @param projectId   Id of the project which we have to delete
      */
     @DeleteMapping("/{id}")
-    public void deleteProject(@PathVariable("id") int projectId) {
+    public ResponseEntity<Void> deleteProject(@PathVariable("id") int projectId) {
         projectService.deleteProject(projectId);
+        logger.info("Project deleted successfully: {}", projectId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

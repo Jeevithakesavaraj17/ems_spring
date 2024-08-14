@@ -47,24 +47,13 @@ public interface ProjectService {
 
     /**
      * <p>
-     *     Checks project is present or not
-     * </p>
-     *
-     * @param projectId   ID of the project to be checked
-     * @return boolean    If project is present, return true or else return false
-     */
-    boolean isProjectPresent(int projectId);
-
-    /**
-     * <p>
      * Update project name in the database
      * </p>
      *
-     * @param projectId  Id of the project who we have to update the details
      * @param projectDto   project details which we have to update
      * @return Project  If project is updated, returns project object
      */
-    ProjectDto updateProject(int projectId, ProjectDto projectDto);
+    ProjectDto updateProject(ProjectDto projectDto);
 
     /**
      * <p>

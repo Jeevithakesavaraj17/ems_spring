@@ -1,5 +1,6 @@
 package com.ideas2it.ems.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,7 @@ import lombok.Setter;
 @Setter
 public class ProjectDto {
     private int id;
+
+    @NotBlank(message = "Project name cannot be blank.")
     private String name;
 }

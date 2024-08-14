@@ -17,6 +17,7 @@ import com.ideas2it.ems.model.Department;
 @Repository
 public interface DepartmentDao extends JpaRepository<Department, Integer>{
 
+    boolean existsByDepartmentName(String departmentName);
     /**
      * <p>
      *    Retrieves all the departments by checking their boolean values

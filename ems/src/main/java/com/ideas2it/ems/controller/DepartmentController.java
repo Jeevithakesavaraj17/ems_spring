@@ -2,6 +2,7 @@ package com.ideas2it.ems.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class DepartmentController {
      * @return savedDepartmentDto   DepartmentDto
      */
     @PostMapping
-    public ResponseEntity<DepartmentDto> addDepartment(@RequestBody DepartmentDto departmentDto) {
+    public ResponseEntity<DepartmentDto> addDepartment(@Valid @RequestBody DepartmentDto departmentDto) {
         DepartmentDto savedDepartmentDto = departmentService.addDepartment(departmentDto);
         logger.info("Department added successfully{}", savedDepartmentDto.getName());
         return new ResponseEntity<>(savedDepartmentDto, HttpStatus.CREATED);
@@ -71,12 +72,8 @@ public class DepartmentController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable("id") int departmentId) {
-        if (departmentService.isDepartmentPresent(departmentId)) {
-            DepartmentDto departmentDto = departmentService.getDepartmentById(departmentId);
-            return new ResponseEntity<>(departmentDto, HttpStatus.OK);
-        }
-        logger.warn("Department not found in this id:{}", departmentId);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        DepartmentDto departmentDto = departmentService.getDepartmentById(departmentId);
+        return new ResponseEntity<>(departmentDto, HttpStatus.OK);
     }
 
     /**
@@ -88,13 +85,9 @@ public class DepartmentController {
      * @return DepartmentDto   {@link DepartmentDto} which we have updated
      */
     @PatchMapping
-    public ResponseEntity<DepartmentDto> updateDepartment(@RequestBody DepartmentDto departmentDto) {
-        if (departmentService.isDepartmentPresent(departmentDto.getId())) {
-            logger.info("Department updated successfully.{}", departmentDto.getName());
-            return new ResponseEntity<>(departmentService.updateDepartment(departmentDto), HttpStatus.OK);
-        }
-        logger.warn("Department is not found for updating:{}", departmentDto.getId());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<DepartmentDto> updateDepartment(@Valid @RequestBody DepartmentDto departmentDto) {
+        logger.info("Department name updated successfully for this Id: {}", departmentDto.getId());
+        return new ResponseEntity<>(departmentService.updateDepartment(departmentDto), HttpStatus.OK);
     }
 
     /**
@@ -106,13 +99,9 @@ public class DepartmentController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDepartment(@PathVariable("id") int departmentId) {
-        if (departmentService.isDepartmentPresent(departmentId)) {
-            departmentService.deleteDepartment(departmentId);
-            logger.info("Department deleted successfully.{}", departmentId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        logger.warn("Department is not found for deleting: {}", departmentId);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        departmentService.deleteDepartment(departmentId);
+        logger.info("Department deleted successfully.{}", departmentId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -125,11 +114,7 @@ public class DepartmentController {
      */
     @GetMapping("/employees/{id}")
     public ResponseEntity<List<EmployeeDto>> getEmployeesByDepartment(@PathVariable("id") int departmentId) {
-        if (departmentService.isDepartmentPresent(departmentId)) {
-            return new ResponseEntity<>(departmentService.getEmployeesByDepartment(departmentId), HttpStatus.OK);
-        }
-        logger.warn("Department is not found for getting employees: {}", departmentId);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(departmentService.getEmployeesByDepartment(departmentId), HttpStatus.OK);
     }
 
 }

@@ -48,16 +48,6 @@ public interface EmployeeService {
 
     /**
      * <p>
-     *     Checks employee is present or not
-     * </p>
-     *
-     * @param employeeId    Id of the employee to be searched
-     * @return boolean      If employee is present, return true or else return false
-     */
-    boolean isEmployeePresent(int employeeId);
-
-    /**
-     * <p>
      *     Update employee name by their employee id
      * </p>
      *

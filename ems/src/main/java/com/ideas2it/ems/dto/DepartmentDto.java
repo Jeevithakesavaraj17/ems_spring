@@ -1,8 +1,8 @@
 package com.ideas2it.ems.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -17,9 +17,11 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
-@NoArgsConstructor
 @Setter
 public class DepartmentDto {
     private int id;
+
+    @NotBlank(message = "Department name cannot be blank.")
+
     private String name;
 }

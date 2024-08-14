@@ -2,7 +2,10 @@ package com.ideas2it.ems.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,7 @@ import com.ideas2it.ems.model.Project;
  */
 @Service
 public class ProjectServiceImpl implements ProjectService {
+    private static final Logger logger = LogManager.getLogger();
     @Autowired
     private ProjectDao projectDao;
 
@@ -46,18 +50,20 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto getProjectById(int projectId) {
         Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+        if (null == project) {
+            logger.warn("No project found in this Id: " + projectId);
+            throw new NoSuchElementException("Project is not found in this Id: " + projectId);
+        }
         return ProjectMapper.convertEntityToDto(project);
     }
 
     @Override
-    public boolean isProjectPresent(int projectId) {
-        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
-        return null != project;
-    }
-
-    @Override
-    public ProjectDto updateProject(int projectId, ProjectDto projectDto) {
-        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+    public ProjectDto updateProject(ProjectDto projectDto) {
+        Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectDto.getId());
+        if (null == project) {
+            logger.warn("No project found in this Id for updating: {}", projectDto.getId());
+            throw new NoSuchElementException("Project is not found: " + projectDto.getId());
+        }
         project.setProjectName(project.getProjectName());
         Project savedProject = projectDao.save(project);
         return ProjectMapper.convertEntityToDto(savedProject);
@@ -66,6 +72,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProject(int projectId) {
         Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
+        if (null == project) {
+            logger.warn("No project found in this Id for deleting: {}", projectId);
+            throw new NoSuchElementException("Project is not found: " + projectId);
+        }
         project.setDeleted(true);
         projectDao.save(project);
     }
@@ -73,11 +83,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<EmployeeDto> getEmployeesByProject(int projectId) {
         Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
-        List<Employee> employees = new ArrayList<>(project.getEmployees());
-        List<EmployeeDto> employeesDtos = new ArrayList<>();
-        for (Employee employee : employees) {
-            employeesDtos.add(EmployeeMapper.convertEntityToDto(employee));
+        if (null == project) {
+            logger.warn("No project found in this Id for getting employees: {}", projectId);
+            throw new NoSuchElementException("Project is not found: " + projectId);
         }
-        return employeesDtos;
+        List<Employee> employees = new ArrayList<>(project.getEmployees());
+        List<EmployeeDto> employeesDto = new ArrayList<>();
+        for (Employee employee : employees) {
+            employeesDto.add(EmployeeMapper.convertEntityToDto(employee));
+        }
+        return employeesDto;
     }
 }

@@ -39,16 +39,6 @@ public interface DepartmentService {
 
     /**
      * <p>
-     *     Checks if the department is present or not
-     * </p>
-     *
-     * @param departmentId     Id of the department which we have to check
-     * @return boolean         If department is present, return true or return false
-     */
-    boolean isDepartmentPresent(int departmentId);
-
-    /**
-     * <p>
      * Get department by departmentId
      * </p>
      *
