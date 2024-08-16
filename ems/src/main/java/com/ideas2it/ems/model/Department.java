@@ -3,6 +3,7 @@ package com.ideas2it.ems.model;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ideas2it.ems.dto.DepartmentDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -58,5 +59,4 @@ public class Department {
         return "Department Id : " + departmentId
                 + "\nDepartmentName : " + departmentName;
     }
-
 }

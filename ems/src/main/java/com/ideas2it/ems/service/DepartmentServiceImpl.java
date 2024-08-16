@@ -64,6 +64,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDto updateDepartment(DepartmentDto departmentDto) {
         Department departmentObject = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentDto.getId());
+        if (departmentDao.existsByDepartmentName(departmentDto.getName())) {
+            throw new EmployeeException("This department is already exists.");
+        }
         departmentObject.setDepartmentName(departmentDto.getName());
         return DepartmentMapper.convertEntityToDto(departmentDao.save(departmentObject));
     }
