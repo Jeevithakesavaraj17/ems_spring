@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.ideas2it.ems.exception.EmployeeException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto addProject(ProjectDto projectDto) {
         Project project = ProjectMapper.convertDtoToEntity(projectDto);
+        if (projectDao.existsByProjectName(projectDto.getName())) {
+            throw new EmployeeException("This Project is already exists.");
+        }
         Project savedProject = projectDao.save(project);
         return ProjectMapper.convertEntityToDto(savedProject);
     }
@@ -51,7 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDto getProjectById(int projectId) {
         Project project = projectDao.findByProjectIdAndIsDeletedFalse(projectId);
         if (null == project) {
-            logger.warn("No project found in this Id: " + projectId);
+            logger.warn("No project found in this Id: {}", projectId);
             throw new NoSuchElementException("Project is not found in this Id: " + projectId);
         }
         return ProjectMapper.convertEntityToDto(project);

@@ -63,12 +63,12 @@ public class EmployeeController {
      * Display list of employees
      * </p>
      *
-     * @return employeesDto   {@link EmployeeDto} List of employee Dto
+     * @return employeeDtos   {@link EmployeeDto} List of employee Dto
      */
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> displayEmployees() {
-        List<EmployeeDto> employeesDto = employeeService.getEmployees();
-        return new ResponseEntity<>(employeesDto, HttpStatus.OK);
+        List<EmployeeDto> employeeDtos = employeeService.getEmployees();
+        return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
     }
 
     /**

@@ -28,7 +28,7 @@ public interface EmployeeDao extends CrudRepository<Employee, Integer> {
 
     /**
      * <p>
-     *     Retrieves single employee by employee Id
+     *     Retrieves single employee by employee Id with boolean value
      * </p>
      *
      * @param employeeId    Id of the employee

@@ -42,10 +42,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public CreateEmployeeDto addEmployee(EmployeeDto employeeDto) {
-        Department department = DepartmentMapper.convertDtoToEntity(departmentService.getDepartmentById(employeeDto.getDepartmentId()));
         SalaryAccount salaryAccount = new SalaryAccount(employeeDto.getAccountNumber(), employeeDto.getIfscCode());
         Employee employee = EmployeeMapper.convertDtoToEntity(employeeDto);
-        employee.setDepartment(department);
         employee.setSalaryAccount(salaryAccount);
         Employee savedEmployee = employeeDao.save(employee);
         return EmployeeMapper.convertEntityToCreateEmployeeDto(savedEmployee);

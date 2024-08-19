@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.ideas2it.ems.exception.EmployeeException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.ideas2it.ems.dao.DepartmentDao;
 import com.ideas2it.ems.dto.DepartmentDto;
 import com.ideas2it.ems.dto.EmployeeDto;
+import com.ideas2it.ems.exception.EmployeeException;
 import com.ideas2it.ems.mapper.DepartmentMapper;
 import com.ideas2it.ems.mapper.EmployeeMapper;
 import com.ideas2it.ems.model.Department;
@@ -20,8 +20,8 @@ import com.ideas2it.ems.model.Employee;
 
 /**
  * <p>
- * This class implements Department service which have method for add, get, update and delete
- * department details and get employees in the particular department.
+ *      This class implements Department service which have method for add, get, update and delete
+ *      department details and get employees in the particular department.
  * </p>
  *
  * @author Jeevithakesavaraj
@@ -55,7 +55,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentDto getDepartmentById(int departmentId) {
         Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
         if (null == department) {
-            logger.warn("No department found for this Id: " + departmentId);
+            logger.warn("No department found for this Id: {}", departmentId);
             throw new NoSuchElementException("Department is not found for this Id: " + departmentId);
         }
         return DepartmentMapper.convertEntityToDto(department);
@@ -81,11 +81,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<EmployeeDto> getEmployeesByDepartment(int departmentId) {
         Department department = departmentDao.findByDepartmentIdAndIsDeletedFalse(departmentId);
-        List<Employee> employees = new ArrayList<>(department.getEmployees());
-        List<EmployeeDto> employeesDto = new ArrayList<>();
-        for (Employee employee : employees) {
-            employeesDto.add(EmployeeMapper.convertEntityToDto(employee));
+        if (null == department) {
+            logger.warn("No department found for this Id for getting employees: {}", departmentId);
+            throw new NoSuchElementException("Department is not found for this Id: " + departmentId);
+        } else {
+            List<Employee> employees = new ArrayList<>(department.getEmployees());
+            List<EmployeeDto> employeeDtos = new ArrayList<>();
+            for (Employee employee : employees) {
+                employeeDtos.add(EmployeeMapper.convertEntityToDto(employee));
+            }
+            return employeeDtos;
         }
-        return employeesDto;
     }
 }

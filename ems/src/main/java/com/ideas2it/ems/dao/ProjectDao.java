@@ -19,6 +19,15 @@ public interface ProjectDao extends CrudRepository<Project, Integer> {
 
     /**
      * <p>
+     *     Checks if the project name is present or not
+     * </p>
+     * @param projectName   Name of the project
+     * @return boolean     If project name is present, return true or else false
+     */
+    boolean existsByProjectName(String projectName);
+
+    /**
+     * <p>
      *    Retrieves all the projects by checking their boolean values
      * </p>
      *

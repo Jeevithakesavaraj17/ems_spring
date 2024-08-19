@@ -17,7 +17,15 @@ import com.ideas2it.ems.model.Department;
 @Repository
 public interface DepartmentDao extends JpaRepository<Department, Integer>{
 
+    /**
+     * <p>
+     *    Checks if the department name is present or not
+     * </p>
+     * @param departmentName   Name of the department
+     * @return boolean        If department name is present, return true or else false
+     */
     boolean existsByDepartmentName(String departmentName);
+
     /**
      * <p>
      *    Retrieves all the departments by checking their boolean values

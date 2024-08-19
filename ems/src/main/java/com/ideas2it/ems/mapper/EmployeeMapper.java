@@ -2,6 +2,7 @@ package com.ideas2it.ems.mapper;
 
 import com.ideas2it.ems.dto.CreateEmployeeDto;
 import com.ideas2it.ems.dto.EmployeeDto;
+import com.ideas2it.ems.model.Department;
 import com.ideas2it.ems.model.Employee;
 
 /**
@@ -44,6 +45,10 @@ public class EmployeeMapper {
         employeeDto.setPhoneNumber(employee.getPhoneNumber());
         employeeDto.setMailId(employee.getMailId());
         employeeDto.setExperience(employee.getExperience());
+        Department department = new Department();
+        department.setDepartmentId(employeeDto.getDepartmentId());
+        department.setDepartmentName(employeeDto.getDepartmentName());
+        employee.setDepartment(department);
         employeeDto.setDepartmentName(employee.getDepartment().getDepartmentName());
         employeeDto.setProjects(employee.getProjectDetails());
         return employeeDto;
